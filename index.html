@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BeatDrop - Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="player-container">
+        <div class="top-bar">
+            <i class="fas fa-chevron-down"></i>
+            <p>NOW PLAYING</p>
+            <i class="fas fa-bars"></i>
+        </div>
+
+        <div class="img-area">
+            <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?q=80&w=500" alt="Album Art" id="track-art">
+        </div>
+
+        <div class="song-details">
+            <h1 id="track-title">Sufi Vibes</h1>
+            <p id="track-artist">Sindhi Folk Fusion</p>
+        </div>
+
+        <div class="progress-area">
+            <input type="range" id="progress-bar" min="0" max="100" value="0">
+            <div class="duration-time">
+                <span id="current-time">0:00</span>
+                <span id="total-duration">0:00</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="shuffle"><i class="fas fa-random" title="Shuffle"></i></button>
+            <button id="prev"><i class="fas fa-step-backward"></i></button>
+            <button id="play-pause" class="play-btn"><i class="fas fa-play"></i></button>
+            <button id="next"><i class="fas fa-step-forward"></i></button>
+            <button id="repeat"><i class="fas fa-redo" title="Repeat"></i></button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

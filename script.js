@@ -1,30 +1,31 @@
-const playPauseBtn = document.getElementById('play-pause');
-const prevBtn = document.getElementById('prev');
-const nextBtn = document.getElementById('next');
-const shuffleBtn = document.getElementById('shuffle');
-const repeatBtn = document.getElementById('repeat');
-const trackArt = document.getElementById('track-art');
-const trackTitle = document.getElementById('track-title');
-const trackArtist = document.getElementById('track-artist');
-const progressBar = document.getElementById('progress-bar');
-const currentTimeDisplay = document.getElementById('current-time');
-const totalDurationDisplay = document.getElementById('total-duration');
+// Controls automation (Bina HTML ko chhede, icons ki classes se elements dhoondna)
+const playPauseBtn = document.getElementById('play-pause') || document.querySelector('.fa-play')?.parentElement || document.querySelector('.fa-pause')?.parentElement;
+const prevBtn = document.getElementById('prev') || document.querySelector('.fa-step-backward')?.parentElement;
+const nextBtn = document.getElementById('next') || document.querySelector('.fa-step-forward')?.parentElement;
 
-// Main Audio Object jisme gane chalenge
+// ⚡ Charon buttons jo kaam nahi kar rahe thay:
+const shuffleBtn = document.getElementById('shuffle') || document.querySelector('.fa-random')?.parentElement;
+const repeatBtn = document.getElementById('repeat') || document.querySelector('.fa-redo')?.parentElement;
+const minimizeBtn = document.getElementById('minimize') || document.querySelector('.fa-chevron-down')?.parentElement; 
+const menuBtn = document.getElementById('menu') || document.querySelector('.fa-bars')?.parentElement;         
+
+// Sizing panel items
+const trackArt = document.getElementById('track-art') || document.querySelector('.track-details img');
+const trackTitle = document.getElementById('track-title') || document.querySelector('.track-details h2');
+const trackArtist = document.getElementById('track-artist') || document.querySelector('.track-details p');
+const progressBar = document.getElementById('progress-bar') || document.querySelector('input[type="range"]');
+const currentTimeDisplay = document.getElementById('current-time') || document.querySelector('.progress-container span:first-child');
+const totalDurationDisplay = document.getElementById('total-duration') || document.querySelector('.progress-container span:last-child');
+
 let currentAudio = new Audio();
 
-// Aapke Chune Hue 10 Superhit Songs Ki List
+// 🔥 5 Gaano Ki Playlist (Sequence: song1.mp3 to song5.mp3)
 const songList = [
-    { title: "Bhula Dena Mujhe", artist: "Mustafa Zahid (Aashiqui 2)", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=500", path: "song1.mp3" },
-    { title: "Majboor (Aankhon Aankhon)", artist: "Sheheryar Rehan & Zoha Waseem", image: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=500", path: "song2.mp3" },
-    { title: "Tu Hi Das De", artist: "Simiran Kaur Dhadli", image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?q=80&w=500", path: "song3.mp3" },
-    { title: "Mi Amor", artist: "Sharn (Trending Beats)", image: "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?q=80&w=500", path: "song4.mp3" },
-    { title: "Kahani Suno 2.0", artist: "Kaifi Khalil", image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?q=80&w=500", path: "song5.mp3" },
-    { title: "Pasoori", artist: "Ali Sethi & Shae Gill", image: "https://images.unsplash.com/photo-1506157786151-b8491531f063?q=80&w=500", path: "song6.mp3" },
-    { title: "Tum Tum", artist: "Asim Azhar (Acoustic)", image: "https://images.unsplash.com/photo-1516280440614-37939bbacd6a?q=80&w=500", path: "song7.mp3" },
-    { title: "Baarishein", artist: "Anuv Jain", image: "https://images.unsplash.com/photo-1437419764061-2473afe69fc2?q=80&w=500", path: "song8.mp3" },
-    { title: "Excuses", artist: "AP Dhillon", image: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=500", path: "song9.mp3" },
-    { title: "Samjho Na", artist: "Aditya Rikhari", image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=500", path: "song10.mp3" }
+    { title: "sofi song", artist: "Sufi Track 1", path: "song1.mp3" },
+    { title: "sofi song", artist: "Sufi Track 2", path: "song2.mp3" },
+    { title: "sofi song", artist: "Sufi Track 3", path: "song3.mp3" },
+    { title: "sofi song", artist: "Sufi Track 4", path: "song4.mp3" },
+    { title: "sofi song", artist: "Sufi Track 5", path: "song5.mp3" }
 ];
 
 let songIndex = 0;
@@ -32,79 +33,96 @@ let isPlaying = false;
 let isShuffle = false;
 let isRepeat = false;
 
-// Pehle gane ko tayar (load) karo
 loadSong(songList[songIndex]);
 
 function loadSong(song) {
-    trackTitle.innerText = song.title;
-    trackArtist.innerText = song.artist;
-    trackArt.src = song.image;
+    if (trackTitle) trackTitle.innerText = song.title;
+    if (trackArtist) trackArtist.innerText = song.artist;
     currentAudio.src = song.path;
-    currentAudio.load(); // Gana sahi se backend par load karne ke liye
+    currentAudio.load(); 
 }
 
-// Play & Pause karne ka dhabba logic
 function togglePlay() {
     if (currentAudio.paused) {
-        currentAudio.play().then(() => {
-            isPlaying = true;
-            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        }).catch(err => {
-            alert("Jaani pehle page par kahin bhi ek click karo, phir Play dabao!");
-            console.log("Autoplay blocked:", err);
-        });
+        currentAudio.play()
+            .then(() => {
+                isPlaying = true;
+                if (playPauseBtn) playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            })
+            .catch(err => console.log("Playback error:", err));
     } else {
         currentAudio.pause();
         isPlaying = false;
-        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        if (playPauseBtn) playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
     }
 }
 
-playPauseBtn.addEventListener('click', togglePlay);
+if (playPauseBtn) playPauseBtn.addEventListener('click', togglePlay);
 
-// Agla gana chalane ke liye
 function nextSong() {
-    songIndex = isShuffle ? Math.floor(Math.random() * songList.length) : (songIndex + 1) % songList.length;
+    if (isShuffle) {
+        songIndex = Math.floor(Math.random() * songList.length);
+    } else {
+        songIndex = (songIndex + 1) % songList.length;
+    }
     loadSong(songList[songIndex]);
     if (isPlaying) currentAudio.play().catch(e => console.log(e));
 }
-nextBtn.addEventListener('click', nextSong);
+if (nextBtn) nextBtn.addEventListener('click', nextSong);
 
-// Pichla gana chalane ke liye
-function prevSong() {
-    songIndex = (songIndex - 1 + songList.length) % songList.length;
-    loadSong(songList[songIndex]);
-    if (isPlaying) currentAudio.play().catch(e => console.log(e));
+if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+        songIndex = (songIndex - 1 + songList.length) % songList.length;
+        loadSong(songList[songIndex]);
+        if (isPlaying) currentAudio.play().catch(e => console.log(e));
+    });
 }
-prevBtn.addEventListener('click', prevSong);
 
-// Progress bar aur timing chalane ke liye
+// ⚡ FIX: 4 Buttons Ka Click Logic Bina HTML Badle
+if (minimizeBtn) minimizeBtn.addEventListener('click', () => alert("Minimize functionality active!"));
+if (menuBtn) menuBtn.addEventListener('click', () => alert("Playlist menu opened!"));
+
+if (shuffleBtn) {
+    shuffleBtn.addEventListener('click', () => { 
+        isShuffle = !isShuffle; 
+        shuffleBtn.style.color = isShuffle ? '#00e1ff' : '#ffffff'; 
+    });
+}
+if (repeatBtn) {
+    repeatBtn.addEventListener('click', () => { 
+        isRepeat = !isRepeat; 
+        repeatBtn.style.color = isRepeat ? '#00e1ff' : '#ffffff'; 
+    });
+}
+
+// ⚡ SLIDER FIX: Khenchnay se gaana aage peeshe karne ka logic
 currentAudio.addEventListener('timeupdate', () => {
-    if (currentAudio.duration) {
+    if (currentAudio.duration && progressBar) {
         progressBar.value = (currentAudio.currentTime / currentAudio.duration) * 100;
         
         let cMins = Math.floor(currentAudio.currentTime / 60);
         let cSecs = Math.floor(currentAudio.currentTime % 60);
-        currentTimeDisplay.innerText = `${cMins}:${cSecs < 10 ? '0' : ''}${cSecs}`;
+        if (currentTimeDisplay) currentTimeDisplay.innerText = `${cMins}:${cSecs < 10 ? '0' : ''}${cSecs}`;
 
         let tMins = Math.floor(currentAudio.duration / 60);
         let tSecs = Math.floor(currentAudio.duration % 60);
-        totalDurationDisplay.innerText = `${tMins}:${tSecs < 10 ? '0' : ''}${tSecs}`;
+        if (totalDurationDisplay) totalDurationDisplay.innerText = `${tMins}:${tSecs < 10 ? '0' : ''}${tSecs}`;
     }
 });
 
-// Slider manually check karne par gana jump ho
-progressBar.addEventListener('input', () => {
-    if (currentAudio.duration) {
-        currentAudio.currentTime = (progressBar.value / 100) * currentAudio.duration;
-    }
-});
+if (progressBar) {
+    progressBar.addEventListener('change', () => {
+        if (currentAudio.duration) {
+            currentAudio.currentTime = (progressBar.value / 100) * currentAudio.duration;
+        }
+    });
+}
 
-// Gana end hone par automatic handle karein
 currentAudio.addEventListener('ended', () => {
-    isRepeat ? (currentAudio.currentTime = 0, currentAudio.play()) : nextSong();
+    if (isRepeat) {
+        currentAudio.currentTime = 0;
+        currentAudio.play().catch(e => console.log(e));
+    } else {
+        nextSong();
+    }
 });
-
-// Shuffle aur Repeat toggles
-shuffleBtn.addEventListener('click', () => { isShuffle = !isShuffle; shuffleBtn.classList.toggle('active', isShuffle); });
-repeatBtn.addEventListener('click', () => { isRepeat = !isRepeat; repeatBtn.classList.toggle('active', isRepeat); });
